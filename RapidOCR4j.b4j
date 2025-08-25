@@ -1,0 +1,55 @@
+﻿AppType=JavaFX
+Build1=Default,b4j.example
+File1=Layout1.bjl
+FileGroup1=Default Group
+Group=Default Group
+Library1=jcore
+Library2=jfx
+Library3=jxui
+Library4=javaobject
+Module1=RapidOCR4j
+NumberOfFiles=1
+NumberOfLibraries=4
+NumberOfModules=1
+Version=10
+@EndOfDesignText@
+#Region Project Attributes 
+	#MainFormWidth: 600
+	#MainFormHeight: 600 
+#End Region
+
+#AdditionalJar: opencv-490
+#AdditionalJar: onnxruntime-1.18.0-nodll
+#AdditionalJar: rapidocr4j-1.0.2
+#AdditionalJar: openpnp-opencv-4.6.0-0
+#AdditionalJar: slf4j-api-1.7.25
+
+Sub Process_Globals
+	Private fx As JFX
+	Private MainForm As Form
+	Private xui As XUI 
+	Private Button1 As B4XView
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	MainForm = Form1
+	MainForm.RootPane.LoadLayout("Layout1")
+	MainForm.Show
+	Dim System As JavaObject
+	System.InitializeStatic("java.lang.System")
+	System.RunMethod("load",Array(File.Combine(File.DirApp,"opencv_java490.dll")))
+	System.RunMethod("load",Array(File.Combine(File.DirApp,"onnxruntime.dll")))
+	System.RunMethod("load",Array(File.Combine(File.DirApp,"onnxruntime4j_jni.dll")))
+	
+	Dim ocr As RapidOCR4j
+	Dim detModelPath As String = File.Combine(File.DirApp,"ch_PP-OCRv5_mobile_det.onnx")
+	Dim recModelPath As String = File.Combine(File.DirApp,"ch_PP-OCRv5_rec_mobile_infer.onnx")
+	Dim recDictPath As String = File.Combine(File.DirApp,"ppocrv5_dict.txt")
+	Dim clsModelPath As String = File.Combine(File.DirApp,"ch_ppocr_mobile_v2.0_cls_infer.onnx")
+	ocr.Initialize(detModelPath,recModelPath,recDictPath,clsModelPath)
+	Log(ocr.Detect(File.Combine(File.DirApp,"capture001.jpg"),True))
+End Sub
+
+Sub Button1_Click
+	xui.MsgboxAsync("Hello World!", "B4X")
+End Sub
