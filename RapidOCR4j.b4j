@@ -3,13 +3,14 @@ Build1=Default,b4j.example
 File1=Layout1.bjl
 FileGroup1=Default Group
 Group=Default Group
-Library1=jcore
-Library2=jfx
-Library3=jxui
-Library4=javaobject
+Library1=javaobject
+Library2=jcore
+Library3=jfx
+Library4=jxui
+Library5=threading
 Module1=RapidOCR4j
 NumberOfFiles=1
-NumberOfLibraries=4
+NumberOfLibraries=5
 NumberOfModules=1
 Version=10
 @EndOfDesignText@
@@ -48,7 +49,9 @@ Sub AppStart (Form1 As Form, Args() As String)
 	Dim clsModelPath As String = File.Combine(File.DirApp,"ch_ppocr_mobile_v2.0_cls_infer.onnx")
 	ocr.Initialize(detModelPath,recModelPath,recDictPath,clsModelPath)
 	Dim img As B4XBitmap = fx.LoadImage(File.DirApp,"capture001.jpg")
-	Log(ocr.Detect("",img,True))
+	'Log(ocr.Detect("",img,True))
+	Wait For (ocr.DetectAsync("",img,True)) complete (regions As List)
+	Log(regions)
 End Sub
 
 Sub Button1_Click

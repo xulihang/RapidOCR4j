@@ -7,7 +7,8 @@ Version=10
 Sub Class_Globals
 	Private fx As JFX
 	Private config As JavaObject
-	Private ocr As JavaObject
+	Private rapid As JavaObject
+	Private th As Thread
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
@@ -17,9 +18,10 @@ Public Sub Initialize(detModelPath As String,recModelPath As String,recDictPath 
 	config.GetFieldJO("Rec").RunMethod("setRecKeysPath",Array(recDictPath))
 	config.GetFieldJO("Rec").RunMethod("setModelPath",Array(recModelPath))
 	config.GetFieldJO("Cls").RunMethod("setModelPath",Array(clsModelPath))
-	Dim rapid As JavaObject
-	rapid.InitializeStatic("io.github.hzkitty.RapidOCR")
-	ocr = rapid.RunMethod("create",Array(config))
+	Dim rapidStatic As JavaObject
+	rapidStatic.InitializeStatic("io.github.hzkitty.RapidOCR")
+	rapid = rapidStatic.RunMethod("create",Array(config))
+	th.Initialise("th")
 End Sub
 
 private Sub ImageToBytes(Image As B4XBitmap) As Byte()
@@ -30,17 +32,52 @@ private Sub ImageToBytes(Image As B4XBitmap) As Byte()
 	Return out.ToBytesArray
 End Sub
 
+Public Sub DetectAsync(path As String,img As B4XBitmap,rotationDetection As Boolean) As ResumableSub
+	Dim regions As List
+	regions.Initialize
+	Dim map1 As Map
+	map1.Initialize
+	map1.Put("path",path)
+	map1.Put("img",img)
+	map1.Put("rotationDetection",rotationDetection)
+	map1.Put("regions",regions)
+	th.Start(Me,"DetectInner",Array As Map(map1))
+	wait for th_Ended(endedOK As Boolean, error As String)
+	Log(endedOK)
+	Log(error)
+	Return regions
+End Sub
+
 Public Sub Detect(path As String,img As B4XBitmap,rotationDetection As Boolean) As List
+	Dim regions As List
+	regions.Initialize
+    Dim map1 As Map
+	map1.Initialize
+	map1.Put("path",path)	
+	map1.Put("img",img)
+	map1.Put("rotationDetection",rotationDetection)
+	map1.Put("regions",regions)
+	Return DetectInner(map1)
+End Sub
+
+Private Sub DetectInner(map1 As Map) As List
+	Dim regions As List
+	Dim path As String 
+	Dim img As B4XBitmap 
+	Dim rotationDetection As Boolean
+	path = map1.Get("path")
+	img = map1.Get("img")
+	rotationDetection = map1.Get("rotationDetection")
+	regions = map1.Get("regions")
 	Dim result As JavaObject
 	If img.IsInitialized Then
-		result = ocr.RunMethod("run",Array(ImageToBytes(img)))
+		result = rapid.RunMethod("run",Array(ImageToBytes(img)))
 	Else
-		result= ocr.RunMethod("run",Array(path))
+		result= rapid.RunMethod("run",Array(path))
 	End If
 	 
 	Dim recResults As List = result.RunMethod("getRecRes",Null)
-	Dim regions As List
-	regions.Initialize
+
 	For Each recResult As JavaObject In recResults
 		Dim region As Map
 		region.Initialize
@@ -115,7 +152,10 @@ Public Sub Detect(path As String,img As B4XBitmap,rotationDetection As Boolean) 
 				maxY = Max(maxY,Y)
 			Next
 			If degree <> 0 Then
-				region.Put("degree",degree)
+				Dim extra As Map
+				extra.Initialize
+				extra.Put("degree",degree)
+				region.Put("extra",extra)
 			End If
 		End If
 		width = maxX - minX
@@ -133,6 +173,8 @@ Public Sub Detect(path As String,img As B4XBitmap,rotationDetection As Boolean) 
 	Next
 	Return regions
 End Sub
+
+
 
 Sub CalculateRotatedPosition(degree As Double,pivotx As Double,pivoty As Double,x As Double,y As Double) As Int()
 	Dim rotate As JavaObject
