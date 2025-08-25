@@ -47,7 +47,8 @@ Sub AppStart (Form1 As Form, Args() As String)
 	Dim recDictPath As String = File.Combine(File.DirApp,"ppocrv5_dict.txt")
 	Dim clsModelPath As String = File.Combine(File.DirApp,"ch_ppocr_mobile_v2.0_cls_infer.onnx")
 	ocr.Initialize(detModelPath,recModelPath,recDictPath,clsModelPath)
-	Log(ocr.Detect(File.Combine(File.DirApp,"capture001.jpg"),True))
+	Dim img As B4XBitmap = fx.LoadImage(File.DirApp,"capture001.jpg")
+	Log(ocr.Detect("",img,True))
 End Sub
 
 Sub Button1_Click

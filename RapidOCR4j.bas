@@ -22,8 +22,22 @@ Public Sub Initialize(detModelPath As String,recModelPath As String,recDictPath 
 	ocr = rapid.RunMethod("create",Array(config))
 End Sub
 
-Public Sub Detect(path As String,rotationDetection As Boolean) As List
-	Dim result As JavaObject = ocr.RunMethod("run",Array(path))
+private Sub ImageToBytes(Image As B4XBitmap) As Byte()
+	Dim out As OutputStream
+	out.InitializeToBytesArray(0)
+	Image.WriteToStream(out, 100, "JPEG")
+	out.Close
+	Return out.ToBytesArray
+End Sub
+
+Public Sub Detect(path As String,img As B4XBitmap,rotationDetection As Boolean) As List
+	Dim result As JavaObject
+	If img.IsInitialized Then
+		result = ocr.RunMethod("run",Array(ImageToBytes(img)))
+	Else
+		result= ocr.RunMethod("run",Array(path))
+	End If
+	 
 	Dim recResults As List = result.RunMethod("getRecRes",Null)
 	Dim regions As List
 	regions.Initialize
