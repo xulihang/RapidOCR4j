@@ -174,8 +174,6 @@ Private Sub DetectInner(map1 As Map) As List
 	Return regions
 End Sub
 
-
-
 Sub CalculateRotatedPosition(degree As Double,pivotx As Double,pivoty As Double,x As Double,y As Double) As Int()
 	Dim rotate As JavaObject
 	rotate.InitializeNewInstance("javafx.scene.transform.Rotate",Array(degree,pivotx,pivoty))
@@ -184,4 +182,44 @@ Sub CalculateRotatedPosition(degree As Double,pivotx As Double,pivoty As Double,
 	point(0)=point2dJO.RunMethod("getX",Null)
 	point(1)=point2dJO.RunMethod("getY",Null)
 	Return point
+End Sub
+
+
+Public Sub GetTextAsync(path As String,img As B4XBitmap,rotationDetection As Boolean) As ResumableSub
+	Dim map1 As Map
+	map1.Initialize
+	map1.Put("path",path)
+	map1.Put("img",img)
+	map1.Put("rotationDetection",rotationDetection)
+	th.Start(Me,"GetTextInner",Array As Map(map1))
+	wait for th_Ended(endedOK As Boolean, error As String)
+	Log(endedOK)
+	Log(error)
+	Return map1.GetDefault("text","")
+End Sub
+
+Public Sub GetText(path As String,img As B4XBitmap,rotationDetection As Boolean) As String
+    Dim map1 As Map
+	map1.Initialize
+	map1.Put("path",path)
+	map1.Put("img",img)
+	map1.Put("rotationDetection",rotationDetection)
+	Return GetTextInner(map1)
+End Sub
+
+Private Sub GetTextInner(map1 As Map) As String
+	Dim path As String 
+	Dim img As B4XBitmap 
+	path = map1.Get("path")
+	img = map1.Get("img")
+
+	Dim result As JavaObject
+	If img.IsInitialized Then
+		result = rapid.RunMethod("run",Array(ImageToBytes(img)))
+	Else
+		result= rapid.RunMethod("run",Array(path))
+	End If
+	Dim text As String = result.RunMethod("getStrRes",Null)
+	map1.Put("text",text)
+	Return text
 End Sub

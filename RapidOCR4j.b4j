@@ -50,8 +50,8 @@ Sub AppStart (Form1 As Form, Args() As String)
 	ocr.Initialize(detModelPath,recModelPath,recDictPath,clsModelPath)
 	Dim img As B4XBitmap = fx.LoadImage(File.DirApp,"capture001.jpg")
 	'Log(ocr.Detect("",img,True))
-	Wait For (ocr.DetectAsync("",img,True)) complete (regions As List)
-	Log(regions)
+	Wait For (ocr.GetTextAsync("",img,True)) complete (text As String)
+	Log(text)
 End Sub
 
 Sub Button1_Click
