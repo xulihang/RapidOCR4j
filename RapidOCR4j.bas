@@ -244,6 +244,9 @@ Private Sub GetTextInner(map1 As Map) As String
 	Dim paramsConfig As JavaObject
 	paramsConfig.InitializeNewInstance("io.github.hzkitty.entity.ParamConfig",Null)
 	paramsConfig.SetField("useDet",textDetection)
+	If textDetection = False Then
+		paramsConfig.SetField("useCls",False)
+	End If
 	Dim result As JavaObject
 	If img.IsInitialized Then
 		result = rapid.RunMethod("run",Array(ImageToBytes(img),paramsConfig))
