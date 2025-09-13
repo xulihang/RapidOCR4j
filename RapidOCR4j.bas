@@ -32,7 +32,7 @@ private Sub ImageToBytes(Image As B4XBitmap) As Byte()
 	Return out.ToBytesArray
 End Sub
 
-Public Sub DetectAsync(path As String,img As B4XBitmap,textDetection As Boolean,rotationDetection As Boolean) As ResumableSub
+Public Sub DetectAsync(path As String,img As B4XBitmap,textDetection As Boolean,recognition As Boolean,rotationDetection As Boolean) As ResumableSub
 	Dim regions As List
 	regions.Initialize
 	Dim map1 As Map
@@ -41,6 +41,7 @@ Public Sub DetectAsync(path As String,img As B4XBitmap,textDetection As Boolean,
 	map1.Put("img",img)
 	map1.Put("rotationDetection",rotationDetection)
 	map1.Put("textDetection",textDetection)
+	map1.Put("recognition",recognition)
 	map1.Put("regions",regions)
 	th.Start(Me,"DetectInner",Array As Map(map1))
 	wait for th_Ended(endedOK As Boolean, error As String)
@@ -49,7 +50,7 @@ Public Sub DetectAsync(path As String,img As B4XBitmap,textDetection As Boolean,
 	Return regions
 End Sub
 
-Public Sub Detect(path As String,img As B4XBitmap,textDetection As Boolean,rotationDetection As Boolean) As List
+Public Sub Detect(path As String,img As B4XBitmap,textDetection As Boolean,recognition as Boolean,rotationDetection As Boolean) As List
 	Dim regions As List
 	regions.Initialize
     Dim map1 As Map
@@ -58,6 +59,7 @@ Public Sub Detect(path As String,img As B4XBitmap,textDetection As Boolean,rotat
 	map1.Put("img",img)
 	map1.Put("rotationDetection",rotationDetection)
 	map1.Put("textDetection",textDetection)
+	map1.Put("recognition",recognition)
 	map1.Put("regions",regions)
 	Return DetectInner(map1)
 End Sub
@@ -67,11 +69,14 @@ Private Sub DetectInner(map1 As Map) As List
 	Dim path As String 
 	Dim img As B4XBitmap 
 	Dim rotationDetection As Boolean
+	Dim recognition As Boolean = True
 	Dim textDetection As Boolean = True
 	textDetection = map1.Get("textDetection")
+	recognition = map1.Get("recognition")
 	Dim paramsConfig As JavaObject
 	paramsConfig.InitializeNewInstance("io.github.hzkitty.entity.ParamConfig",Null)
 	paramsConfig.SetField("useDet",textDetection)
+	paramsConfig.SetField("useRec",recognition)
 	path = map1.Get("path")
 	img = map1.Get("img")
 	rotationDetection = map1.Get("rotationDetection")
