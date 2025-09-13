@@ -12,7 +12,7 @@ Module1=RapidOCR4j
 NumberOfFiles=1
 NumberOfLibraries=5
 NumberOfModules=1
-Version=10
+Version=8.9
 @EndOfDesignText@
 #Region Project Attributes 
 	#MainFormWidth: 600
@@ -20,7 +20,7 @@ Version=10
 #End Region
 
 #AdditionalJar: opencv-490
-#AdditionalJar: onnxruntime-1.18.0-nodll
+#AdditionalJar: onnxruntime-1.20.0-nodll
 #AdditionalJar: rapidocr4j-1.0.2
 #AdditionalJar: openpnp-opencv-4.6.0-0
 #AdditionalJar: slf4j-api-1.7.25
@@ -48,10 +48,11 @@ Sub AppStart (Form1 As Form, Args() As String)
 	Dim recDictPath As String = File.Combine(File.DirApp,"ppocrv5_dict.txt")
 	Dim clsModelPath As String = File.Combine(File.DirApp,"ch_ppocr_mobile_v2.0_cls_infer.onnx")
 	ocr.Initialize(detModelPath,recModelPath,recDictPath,clsModelPath)
-	Dim img As B4XBitmap = fx.LoadImage(File.DirApp,"capture001.jpg")
-	'Log(ocr.Detect("",img,True))
-	Wait For (ocr.GetTextAsync("",img,True)) complete (text As String)
-	Log(text)
+	Dim img As B4XBitmap = fx.LoadImage(File.DirApp,"image.jpg")
+	img = img.Rotate(90)
+	Log(ocr.Detect("",img,False,True))
+	'Wait For (ocr.GetTextAsync("",img,False,True)) complete (text As String)
+	'Log(text)
 End Sub
 
 Sub Button1_Click
