@@ -15,6 +15,9 @@ To use the models in ImageTrans, you need to put the dict file and the model fil
       ch_PP-OCRv5_server_det.onnx:
         model_dir: https://www.modelscope.cn/models/RapidAI/RapidOCR/resolve/v3.4.0/onnx/PP-OCRv5/det/ch_PP-OCRv5_server_det.onnx
         SHA256: 0f8846b1d4bba223a2a2f9d9b44022fbc22cc019051a602b41a7fda9667e4cad
+      multi_PP-OCRv3_det_infer.onnx:
+        model_dir: https://www.modelscope.cn/models/RapidAI/RapidOCR/resolve/v3.4.0/onnx/PP-OCRv4/det/Multilingual_PP-OCRv3_det_infer.onnx
+        SHA256: 5475c6c7f4d84a6c4f32241b487435d59f126a40c023387af99732258844cdc3
     rec:
       ch_PP-OCRv5_rec_mobile_infer:
         model_dir: https://www.modelscope.cn/models/RapidAI/RapidOCR/resolve/v3.4.0/onnx/PP-OCRv5/rec/ch_PP-OCRv5_rec_mobile_infer.onnx
@@ -48,6 +51,10 @@ To use the models in ImageTrans, you need to put the dict file and the model fil
         model_dir: https://www.modelscope.cn/models/RapidAI/RapidOCR/resolve/v3.4.0/onnx/PP-OCRv5/rec/el_PP-OCRv5_rec_mobile_infer.onnx
         dict_url: https://www.modelscope.cn/models/RapidAI/RapidOCR/resolve/v3.4.0/paddle/PP-OCRv5/rec/el_PP-OCRv5_rec_mobile_infer/ppocrv5_el_dict.txt
         SHA256: b4368bccd557123c702b7549fee6cd1e94b581337d1c9b65310f109131542b7f
+      arabic_PP-OCRv4_rec_infer:
+        model_dir: https://www.modelscope.cn/models/RapidAI/RapidOCR/resolve/v3.4.0/onnx/PP-OCRv4/rec/arabic_PP-OCRv4_rec_infer.onnx
+        dict_url: https://www.modelscope.cn/models/RapidAI/RapidOCR/resolve/v3.4.0/paddle/PP-OCRv4/rec/arabic_PP-OCRv4_rec_infer/arabic_dict.txt
+        SHA256: 4a9011bef71687bb84288dc86ad2471bd5d37b717ddf672dd156f9e7a5601bac
 ```
 
 Source: https://github.com/RapidAI/RapidOCR/blob/main/python/rapidocr/default_models.yaml
