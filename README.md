@@ -6,6 +6,9 @@ You can find the models in the following list:
 
 To use the models in ImageTrans, you need to put the dict file and the model file under the `rapidocr` folder.
 
+For example, if you need to use Arabic. You need to download `Multilingual_PP-OCRv3_det_infer.onnx`, `arabic_PP-OCRv5_mobile_rec_infer.onnx` and 
+`ppocrv5_arabic_dict.txt` to the `rapidocr` folder.
+
 ```
   PP-OCRv5:
     det:
@@ -51,6 +54,9 @@ To use the models in ImageTrans, you need to put the dict file and the model fil
         model_dir: https://www.modelscope.cn/models/RapidAI/RapidOCR/resolve/v3.4.0/onnx/PP-OCRv5/rec/el_PP-OCRv5_rec_mobile_infer.onnx
         dict_url: https://www.modelscope.cn/models/RapidAI/RapidOCR/resolve/v3.4.0/paddle/PP-OCRv5/rec/el_PP-OCRv5_rec_mobile_infer/ppocrv5_el_dict.txt
         SHA256: b4368bccd557123c702b7549fee6cd1e94b581337d1c9b65310f109131542b7f
+      arabic_PP-OCRv5_rec_mobile_infer.onnx:
+        model_dir: https://github.com/xulihang/RapidOCR4j/releases/download/models/arabic_PP-OCRv5_mobile_rec_infer.onnx
+        dict_url: https://github.com/xulihang/RapidOCR4j/releases/download/models/ppocrv5_arabic_dict.txt
       arabic_PP-OCRv4_rec_infer:
         model_dir: https://www.modelscope.cn/models/RapidAI/RapidOCR/resolve/v3.4.0/onnx/PP-OCRv4/rec/arabic_PP-OCRv4_rec_infer.onnx
         dict_url: https://www.modelscope.cn/models/RapidAI/RapidOCR/resolve/v3.4.0/paddle/PP-OCRv4/rec/arabic_PP-OCRv4_rec_infer/arabic_dict.txt
